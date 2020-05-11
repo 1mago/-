@@ -1,7 +1,7 @@
 import pymysql.cursors
 import requests
 
-token='f906ab30c793e12b04822edd83a439d5f68cd6a9f151bc86693b5e99ad13216d4ac92ad37623fca3db7e9'
+token='b5ea00646cd29abc258805c5b5d1aea7ac0ed346ddb183d3d9144898eff90a8d7af3218857e3a6050b28a'
 version=5.103
 extended=1
 class People(object):
@@ -12,13 +12,12 @@ class People(object):
         self.offset=offset
 
     def users(self):
-       global id_wall
        user=[]
        group=[]
        wall=[]
        friend=[]
-       like=[]
-       def users():
+
+       def users2():
            response=requests.get ( 'https://api.vk.com/method/users.get',
                                    params={
                                        'access_token': token,
@@ -30,11 +29,11 @@ class People(object):
            data=response.json ()['response']
            user.extend ( data )
            return user
-       user=users()
+       user=users2()
 
        connection=pymysql.connect ( host='127.0.0.1',
                                          user='root',
-                                         password='root123',
+                                         password='kursach',
                                          db='mydb' )
 
        for item in user:
@@ -47,6 +46,8 @@ class People(object):
                             item.get ( 'last_name' ), item.get ( 'bdate' ),
                             item.get ( 'mobile_phone' ), item.get ( 'home_phone' ),
                             item.get ( 'music' ), item.get ( 'about' )) )
+                        # connection is not autocommit by default. So you must commit to save
+                        # your changes.
                     connection.commit ()
                 except Exception:
                     print ( "Error" )
@@ -68,7 +69,7 @@ class People(object):
 
        connection=pymysql.connect ( host='127.0.0.1',
                                         user='root',
-                                        password='root123',
+                                        password='kursach',
                                         db='mydb',
                                         charset='utf8mb4',
                                         cursorclass=pymysql.cursors.DictCursor )
@@ -81,6 +82,8 @@ class People(object):
                            cursor.execute ( sql, (
                                item.get ( '№', [self.offset] ), item.get ( 'id' ), item.get ( 'name' ),
                                item.get ( 'screen_name' )) )
+                           # connection is not autocommit by default. So you must commit to save
+                           # your changes.
                        connection.commit ()
                    except Exception:
                        print ( "Error" )
@@ -99,7 +102,7 @@ class People(object):
 
        connection=pymysql.connect ( host='127.0.0.1',
                                      user='root',
-                                     password='root123',
+                                     password='kursach',
                                      db='mydb',
                                      charset='utf8mb4',
                                      cursorclass=pymysql.cursors.DictCursor )
@@ -107,7 +110,7 @@ class People(object):
 
        for item in wall:
                 try:
-
+                    id_wall=item.get ( 'id' )
                     with connection.cursor () as cursor:
                         # Create a new record
                         sql="INSERT INTO `wall` (`№`,`id`,`text`,`likes`,`comments`,`reposts`) VALUES (%s,%s,%s,%s,%s,%s )"
@@ -116,6 +119,8 @@ class People(object):
                             item.get ( 'likes' ).get ( 'count' ),
                             item.get ( 'comments' ).get ( 'count' ),
                             item.get ( 'reposts' ).get ( 'count' )) )
+                        # connection is not autocommit by default. So you must commit to save
+                        # your changes.
                     connection.commit ()
                 except Exception:
                     print ( "Error" )
@@ -136,7 +141,7 @@ class People(object):
 
        connection=pymysql.connect ( host='127.0.0.1',
                                         user='root',
-                                        password='root123',
+                                        password='kursach',
                                         db='mydb',
                                         charset='utf8mb4',
                                         cursorclass=pymysql.cursors.DictCursor )
@@ -151,54 +156,16 @@ class People(object):
                            cursor.execute ( sql, (
                                item.get ( '№', [self.offset] ), item.get ( 'id' ), item.get ( 'first_name' ),
                                item.get ( 'last_name' )) )
+                           # connection is not autocommit by default. So you must commit to save
+                           # your changes.
                        connection.commit ()
                    except Exception:
                        print ( "Error" )
        connection.close ()
 
-       for item in wall:
-        id_wall=item.get ( 'id' )
 
-       def likes():
-           try:
-               type='post'
-               response1=requests.get ( 'https://api.vk.com/method/likes.getList',
-                                        params={
-                                            'access_token': token,
-                                            'v': version,
-                                            'owner_id': self.ids,
-                                            'type': type,
-                                            'item_id': id_wall
-                                        } )
-               data=response1.json ()['response']['items']
-               like.extend ( data )
-               return like
-           except Exception:
-               print('error')
 
-       like=likes()
 
-       connection=pymysql.connect ( host='127.0.0.1',
-                                     user='root',
-                                     password='root123',
-                                     db='mydb',
-                                     charset='utf8mb4',
-                                     cursorclass=pymysql.cursors.DictCursor )
-
-       try:
-           for item in like:
-               try:
-                   with connection.cursor () as cursor:
-                       # Create a new record
-                       sql="INSERT INTO `likes` (`№`,`id_wall`,`id_friends`) VALUES (%s,%s ,%s)"
-                       cursor.execute ( sql, (
-                           item.get ( '№', [self.offset] ), item.get ( 'id_wall', [id_wall] ), item) )
-                   connection.commit ()
-               except Exception as e:
-                   print ( e )
-           connection.close ()
-       except Exception:
-           print('ww')
 
 
 if __name__ == "__main__":
@@ -264,5 +231,7 @@ if __name__ == "__main__":
     People17=People ( 'id487119415', '487119415', '17' )
     People17.users ()
 
+
     People18=People ( 'id18864498', '18864498', '18' )
     People18.users ()
+
