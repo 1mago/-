@@ -2,7 +2,7 @@ import pymysql.cursors
 import requests
 import time
 
-token='8c7ea3b038586da9fd390e3424f3aa46e0164e3e4ccc8996dab7ca24ee8c4131d6d61919e1aeeff6f421c'
+token='722e789610059c76e983e21b83a929299bc99ba29d2232d332520f6cd6c091f4d9c27d06fdd72252ecce9'
 version=5.103
 extended=1
 class People(object):
@@ -36,7 +36,7 @@ class People(object):
 
        connection=pymysql.connect ( host='127.0.0.1',
                                          user='root',
-                                         password='Basketboll2002',
+                                         password='kursach',
                                          db='mydb' )
 
        for item in user:
@@ -49,8 +49,6 @@ class People(object):
                             item.get ( 'last_name' ), item.get ( 'bdate' ),
                             item.get ( 'mobile_phone' ), item.get ( 'home_phone' ),
                             item.get ( 'music' ), item.get ( 'about' )) )
-                        # connection is not autocommit by default. So you must commit to save
-                        # your changes.
                     connection.commit ()
                 except Exception:
                     print ( "Error" )
@@ -73,7 +71,7 @@ class People(object):
 
            connection=pymysql.connect ( host='127.0.0.1',
                                         user='root',
-                                        password='Basketboll2002',
+                                        password='kursach',
                                         db='mydb',
                                         charset='utf8mb4',
                                         cursorclass=pymysql.cursors.DictCursor )
@@ -86,8 +84,6 @@ class People(object):
                            cursor.execute ( sql, (
                                item.get ( '№', [self.offset] ), item.get ( 'id' ), item.get ( 'name' ),
                                item.get ( 'screen_name' )) )
-                           # connection is not autocommit by default. So you must commit to save
-                           # your changes.
                        connection.commit ()
                    except Exception:
                        print ( "Error" )
@@ -111,7 +107,7 @@ class People(object):
 
        connection=pymysql.connect ( host='127.0.0.1',
                                         user='root',
-                                        password='Basketboll2002',
+                                        password='kursach',
                                         db='mydb',
                                         charset='utf8mb4',
                                         cursorclass=pymysql.cursors.DictCursor )
@@ -126,8 +122,6 @@ class People(object):
                            cursor.execute ( sql, (
                                item.get ( '№', [self.offset] ), item.get ( 'id' ), item.get ( 'first_name' ),
                                item.get ( 'last_name' )) )
-                           # connection is not autocommit by default. So you must commit to save
-                           # your changes.
                        connection.commit ()
                    except Exception:
                        print ( "Error" )
@@ -147,7 +141,7 @@ class People(object):
 
        connection=pymysql.connect ( host='127.0.0.1',
                                      user='root',
-                                     password='Basketboll2002',
+                                     password='kursach',
                                      db='mydb',
                                      charset='utf8mb4',
                                      cursorclass=pymysql.cursors.DictCursor )
@@ -163,8 +157,6 @@ class People(object):
                             item.get ( 'likes' ).get ( 'count' ),
                             item.get ( 'comments' ).get ( 'count' ),
                             item.get ( 'reposts' ).get ( 'count' )) )
-                        # connection is not autocommit by default. So you must commit to save
-                        # your changes.
                     connection.commit ()
                 except Exception:
                     print ( "Error" )
@@ -212,7 +204,7 @@ class likes():
 
             connection=pymysql.connect ( host='127.0.0.1',
                                          user='root',
-                                         password='Basketboll2002',
+                                         password='kursach',
                                          db='mydb',
                                          charset='utf8mb4',
                                          cursorclass=pymysql.cursors.DictCursor )
@@ -226,8 +218,6 @@ class likes():
                             cursor.execute ( sql, (
                                 item.get ( 'id_wall', [self.id_wall] ),
                                 item.get ( 'id_friends')) )
-                            # connection is not autocommit by default. So you must commit to save
-                            # your changes.
                         connection.commit ()
                     except Exception as e:
                         print ( e )
