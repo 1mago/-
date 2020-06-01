@@ -2,11 +2,10 @@ import pymysql.cursors
 import requests
 import time
 
-token = '45124100c022953b0a114ca89d2c25aebce6e11e6f32e9aec0087c233595c7915a32bc079db1b25ec8ff0'
+token = '785128a7b737ef53a5b4eee468070cd60edd278765cfdedf84b6018fef92a7fab9c5a9c1ee77e68fa3508'
 version = 5.103
 extended = 1
 fields = 'bdate, mobile_phone,home_phone,friends,music,about'
-
 
 class People(object):
     def __init__(self, id, ids, offset):
@@ -44,15 +43,12 @@ class People(object):
         for item in user:
             try:
                 with connection.cursor() as cursor:
-                    # Create a new record
                     sql = "INSERT INTO `json` (`№`,`id` , `first_name`,`last_name`,`bdate`,`mobile_phone`,`home_phone`,`music`,`about`) VALUES (%s,%s ,%s ,%s ,%s ,%s ,%s,%s,%s )"
                     cursor.execute(sql, (
                         item.get('№', [self.offset]), item.get('id'), item.get('first_name'),
                         item.get('last_name'), item.get('bdate'),
                         item.get('mobile_phone'), item.get('home_phone'),
                         item.get('music'), item.get('about')))
-                    # connection is not autocommit by default. So you must commit to save
-                    # your changes.
                 connection.commit()
             except Exception as e:
                 print(e)
@@ -83,13 +79,10 @@ class People(object):
             for item in group:
                 try:
                     with connection.cursor() as cursor:
-                        # Create a new record
                         sql = "INSERT INTO `groups` (`№`,`id_group`,`name_group`,`screen_name_group`) VALUES (%s,%s,%s,%s )"
                         cursor.execute(sql, (
                             item.get('№', [self.offset]), item.get('id'), item.get('name'),
                             item.get('screen_name')))
-                        # connection is not autocommit by default. So you must commit to save
-                        # your changes.
                     connection.commit()
                 except Exception as e:
                     print(e)
@@ -124,15 +117,11 @@ class People(object):
 
             for item in friend:
                 try:
-
                     with connection.cursor() as cursor:
-                        # Create a new record
                         sql = "INSERT INTO `friends` (`№`,`id`,`first_name`,`last_name`) VALUES (%s,%s,%s,%s)"
                         cursor.execute(sql, (
                             item.get('№', [self.offset]), item.get('id'), item.get('first_name'),
                             item.get('last_name')))
-                        # connection is not autocommit by default. So you must commit to save
-                        # your changes.
                     connection.commit()
                 except Exception as e:
                     print(e)
@@ -165,15 +154,12 @@ class People(object):
             for item in wall:
                 try:
                     with connection.cursor() as cursor:
-                        # Create a new record
                         sql = "INSERT INTO `wall` (`№`,`id`,`likes`,`comments`,`reposts`) VALUES (%s,%s,%s,%s,%s )"
                         cursor.execute(sql, (
                             item.get('№', [self.offset]), item.get('id'),
                             item.get('likes').get('count'),
                             item.get('comments').get('count'),
                             item.get('reposts').get('count')))
-                        # connection is not autocommit by default. So you must commit to save
-                        # your changes.
                     connection.commit()
                 except Exception as e:
                     print(e)
@@ -209,34 +195,30 @@ class likes():
         dict = {}
         id_friends = []
         try:
-            for likes_item in likes():
-                print(str((likes_item)))
                 id_friends.append({
-                "id_friends": str((likes_item))})
+                "id_friends": likes()})
                 dict["id_friends"] = id_friends
         except Exception as e:
             print(e)
-
         connection = pymysql.connect(host='127.0.0.1',
                                      user='root',
                                      password='kursach',
                                      db='newest_schema',
                                      charset='utf8mb4',
                                      cursorclass=pymysql.cursors.DictCursor)
-
         try:
             for item in id_friends:
-                try:
+                i = 0
+                while i < len(item.get('id_friends')):
                     with connection.cursor() as cursor:
-                        print(item.get('id_friends'))
+                        print(item.get('id_friends')[i])
                         sql = "INSERT INTO `likes` (`id_wall`,`id_friends`) VALUES (%s ,%s)"
                         cursor.execute(sql, (
                         item.get('id_wall', [self.id_wall]),
-                        item.get('id_friends')))
+                        item.get('id_friends')[i]))
+                        i += 1
                         connection.commit()
-                        connection.close()
-                except Exception as e:
-                    print(e)
+
         except Exception as e:
             print(e)
 
