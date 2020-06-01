@@ -15,7 +15,7 @@ class People(object):
 
     def users(self):
         user = []
-        group = []
+        grup = []
         wall = []
         friend = []
 
@@ -54,7 +54,7 @@ class People(object):
                 print(e)
         connection.close()
         try:
-            def groups():
+            def grups():
                 time.sleep(0.5)
                 response2 = requests.get('https://api.vk.com/method/groups.get',
                                          params={
@@ -64,10 +64,10 @@ class People(object):
                                              'extended': extended,
                                          })
                 data = response2.json()['response']['items']
-                group.extend(data)
-                return group
+                grup.extend(data)
+                return grup
 
-            group = groups()
+            grup = grups()
 
             connection = pymysql.connect(host='127.0.0.1',
                                          user='root',
@@ -76,10 +76,10 @@ class People(object):
                                          charset='utf8mb4',
                                          cursorclass=pymysql.cursors.DictCursor)
 
-            for item in group:
+            for item in grup:
                 try:
                     with connection.cursor() as cursor:
-                        sql = "INSERT INTO `groups` (`№`,`id_group`,`name_group`,`screen_name_group`) VALUES (%s,%s,%s,%s )"
+                        sql = "INSERT INTO `grups` (`№`,`id_grup`,`name_grup`,`screen_name_grup`) VALUES (%s,%s,%s,%s )"
                         cursor.execute(sql, (
                             item.get('№', [self.offset]), item.get('id'), item.get('name'),
                             item.get('screen_name')))
