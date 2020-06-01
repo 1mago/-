@@ -75,14 +75,14 @@ class People(object):
                                          db='newest_schema',
                                          charset='utf8mb4',
                                          cursorclass=pymysql.cursors.DictCursor)
-
             for item in grup:
                 try:
                     with connection.cursor() as cursor:
-                        sql = "INSERT INTO `grups` (`№`,`id_grup`,`name_grup`,`screen_name_grup`) VALUES (%s,%s,%s,%s )"
+                        print(self.id[2:])
+                        sql = "INSERT INTO `grups` (`№`,`id_grup`,`name_grup`,`screen_name_grup`, `json_idjson`) VALUES (%s,%s,%s,%s,%s)"
                         cursor.execute(sql, (
                             item.get('№', [self.offset]), item.get('id'), item.get('name'),
-                            item.get('screen_name')))
+                            item.get('screen_name'), self.id[2:]))
                     connection.commit()
                 except Exception as e:
                     print(e)
@@ -118,10 +118,10 @@ class People(object):
             for item in friend:
                 try:
                     with connection.cursor() as cursor:
-                        sql = "INSERT INTO `friends` (`№`,`id`,`first_name`,`last_name`) VALUES (%s,%s,%s,%s)"
+                        sql = "INSERT INTO `friends` (`№`,`id`,`first_name`,`last_name`, `json_idjson`) VALUES (%s,%s,%s,%s, %s)"
                         cursor.execute(sql, (
                             item.get('№', [self.offset]), item.get('id'), item.get('first_name'),
-                            item.get('last_name')))
+                            item.get('last_name'), self.id[2:]))
                     connection.commit()
                 except Exception as e:
                     print(e)
@@ -154,12 +154,12 @@ class People(object):
             for item in wall:
                 try:
                     with connection.cursor() as cursor:
-                        sql = "INSERT INTO `wall` (`№`,`id`,`likes`,`comments`,`reposts`) VALUES (%s,%s,%s,%s,%s )"
+                        sql = "INSERT INTO `wall` (`№`,`id`,`likes`,`comments`,`reposts`, `json_idjson`) VALUES (%s,%s,%s,%s,%s,%s )"
                         cursor.execute(sql, (
                             item.get('№', [self.offset]), item.get('id'),
                             item.get('likes').get('count'),
                             item.get('comments').get('count'),
-                            item.get('reposts').get('count')))
+                            item.get('reposts').get('count'), self.id[2:]))
                     connection.commit()
                 except Exception as e:
                     print(e)
